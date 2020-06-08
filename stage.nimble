@@ -17,8 +17,9 @@ requires "cligen"
 let sh = """
 cat << EOF > .git/hooks/pre-commit
 #!/bin/sh
-stage checkError
-stage fixStyle
+if stage checkError;then
+    stage fixStyle
+fi
 EOF
 chmod +x .git/hooks/pre-commit
 """
