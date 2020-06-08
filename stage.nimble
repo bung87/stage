@@ -19,6 +19,8 @@ cat << EOF > .git/hooks/pre-commit
 #!/bin/sh
 if stage checkError;then
     stage fixStyle
+else
+    exit 1
 fi
 EOF
 chmod +x .git/hooks/pre-commit
