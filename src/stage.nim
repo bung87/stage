@@ -1,4 +1,5 @@
 {.define(shellNoDebugOutput).}
+{.define(shellNoDebugCommand).}
 import shell
 import strutils
 import strformat
