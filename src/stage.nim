@@ -45,8 +45,8 @@ when isMainModule and defined(debug):
 
 when isMainModule and defined(release):
   import cligen
-  proc fixStyleD(): int =
-    result = fixStyle(getStagedFiles())
-  proc checkErrorD(): int =
-    result = checkError(getStagedFiles())
+  proc fixStyleD(): bool =
+    result = fixStyle(getStagedFiles()).bool
+  proc checkErrorD(): bool =
+    result = checkError(getStagedFiles()).bool
   dispatchMulti([fixStyleD, cmdName = "fixStyle"], [checkErrorD, cmdName = "checkError"])
