@@ -17,7 +17,7 @@ proc checkError*(files: seq[string]): int =
     let (output, exitCode) = execCmdEx("nim " & "check --hints:off --colors:on  " & file)
     if exitCode != 0:
       shell:
-        git restore "--staged" $file
+        git restore "--staged" ($file)
       result = exitCode
 
     stdout.write(output)
