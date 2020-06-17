@@ -14,6 +14,9 @@ requires "nim >= 1.3.3"
 requires "shell"
 requires "cligen"
 
+task debug, "Builds":
+  exec "nim c -o:stage src/stage"
+
 let sh = """
 cat << EOF > .git/hooks/pre-commit
 #!/bin/sh

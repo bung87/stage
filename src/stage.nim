@@ -9,14 +9,17 @@ import sequtils
 
 proc getStagedFiles*(): seq[string] =
   var stdout = shellVerbose:
-    git diff "--cached""--name-only""--diff-filter=d"
+    git diff "--cached" "--name-only" "--diff-filter=d"
   result = stdout.output.splitLines().filterIt(fileExists(it))
 
 proc checkError*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):
     let (output, exitCode) = execCmdEx("nim " & "check --hints:off --colors:on  " & file)
     if exitCode != 0:
+      shell:
+        git restore "--staged" $file
       result = exitCode
+
     stdout.write(output)
 
 proc checkStyle*(files: seq[string]) =
@@ -38,7 +41,7 @@ proc fixStyle*(files: seq[string]): int =
       result = exitCode
     stdout.write(output)
 
-when isMainModule and defined(debug):
+when isMainModule and not defined(release):
   let files = getStagedFiles()
   echo files
   discard checkError(files)
