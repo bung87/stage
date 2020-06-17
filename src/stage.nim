@@ -9,7 +9,7 @@ import sequtils
 
 proc getStagedFiles*(): seq[string] =
   var stdout = shellVerbose:
-    git diff "--cached" "--name-only" "--diff-filter=d"
+    git diff "--cached""--name-only""--diff-filter=d"
   result = stdout.output.splitLines().filterIt(fileExists(it))
 
 proc checkError*(files: seq[string]): int =

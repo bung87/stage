@@ -9,4 +9,4 @@ import unittest
 import stage
 
 test "can add":
-  check add(5, 5) 
+  check add(5, 5)

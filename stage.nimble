@@ -17,15 +17,15 @@ requires "cligen"
 task debug, "Builds":
   exec "nim c -o:stage src/stage"
 
+import os
+
 let sh = """
-cat << EOF > .git/hooks/pre-commit
 #!/bin/sh
 if stage checkError;then
     stage fixStyle
 else
     exit 1
 fi
-EOF
-chmod +x .git/hooks/pre-commit
 """
-exec sh
+writeFile ".git/hooks/pre-commit",sh
+# inclFilePermissions ".git/hooks/pre-commit",{fpUserExec,fpGroupExec,fpOthersExec}
