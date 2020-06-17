@@ -14,11 +14,6 @@ requires "nim >= 1.3.3"
 requires "shell"
 requires "cligen"
 
-task debug, "Builds":
-  exec "nim c -o:stage src/stage"
-
-import os
-
 let sh = """
 #!/bin/sh
 if stage checkError;then
@@ -28,4 +23,5 @@ else
 fi
 """
 writeFile ".git/hooks/pre-commit",sh
+exec "chmod 0755 .git/hooks/pre-commit"
 # inclFilePermissions ".git/hooks/pre-commit",{fpUserExec,fpGroupExec,fpOthersExec}
