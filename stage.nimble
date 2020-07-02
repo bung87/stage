@@ -10,7 +10,7 @@ bin = @["stage"]
 
 # Dependencies
 
-requires "nim >= 1.3.3"
+requires "nim >= 1.2.4"
 requires "shell"
 requires "cligen"
 
