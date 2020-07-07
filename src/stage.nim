@@ -74,11 +74,11 @@ when isMainModule and defined(release):
     let files = if allFiles: listFiles(pattern) else: getStagedFiles(pattern)
 
     result = checkError(files).bool
-  
-  proc init():void =
+
+  proc init(): void =
     if existsDir(".git"):
-      writeFile ".git/hooks/pre-commit",SH
-      inclFilePermissions ".git/hooks/pre-commit",{fpUserExec,fpGroupExec,fpOthersExec}
+      writeFile ".git/hooks/pre-commit", SH
+      inclFilePermissions ".git/hooks/pre-commit", {fpUserExec, fpGroupExec, fpOthersExec}
     else:
       stderr.write("Please run git init first\n")
 
