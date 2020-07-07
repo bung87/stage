@@ -7,6 +7,15 @@ import osproc
 import os
 import sequtils
 
+const SH = """
+#!/bin/sh
+if stage checkError;then
+    stage fixStyle
+else
+    exit 1
+fi
+"""
+
 proc getStagedFiles*(pattern: string = ""): seq[string] =
   var stdout = shellVerbose:
     git diff "--cached""--name-only""--diff-filter=d" ($pattern)
@@ -65,8 +74,16 @@ when isMainModule and defined(release):
     let files = if allFiles: listFiles(pattern) else: getStagedFiles(pattern)
 
     result = checkError(files).bool
+  
+  proc init():void =
+    if existsDir(".git"):
+      writeFile ".git/hooks/pre-commit",SH
+      inclFilePermissions ".git/hooks/pre-commit",{fpUserExec,fpGroupExec,fpOthersExec}
+    else:
+      stderr.write("Please run git init first\n")
 
   dispatchMulti(
+    [init],
     [fixStyleD, cmdName = "fixStyle", help = {
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
