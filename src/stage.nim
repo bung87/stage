@@ -76,7 +76,7 @@ when isMainModule and defined(release):
     result = checkError(files).bool
 
   proc init(): void =
-    if existsDir(".git"):
+    if dirExists(".git"):
       writeFile ".git/hooks/pre-commit", SH
       inclFilePermissions ".git/hooks/pre-commit", {fpUserExec, fpGroupExec, fpOthersExec}
     else:
