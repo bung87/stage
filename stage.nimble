@@ -22,7 +22,7 @@ else
     exit 1
 fi
 """
-if existsDir(".git"):
+if dirExists(".git"):
   writeFile ".git/hooks/pre-commit",sh
   exec "chmod 0755 .git/hooks/pre-commit"
   # inclFilePermissions ".git/hooks/pre-commit",{fpUserExec,fpGroupExec,fpOthersExec}
