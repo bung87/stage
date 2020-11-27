@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.0"
+version       = "0.3.0"
 author        = "bung87"
 description   = "nim tasks apply to git hooks"
 license       = "MIT"
@@ -12,7 +12,7 @@ bin = @["stage"]
 
 requires "nim >= 1.2.4"
 requires "shell"
-requires "cligen"
+requires "cligen >= 1.3.2"
 
 let sh = """
 #!/bin/sh

@@ -2,7 +2,6 @@
 {.define(shellNoDebugCommand).}
 import shell
 import strutils
-import strformat
 import osproc
 import os
 import sequtils
@@ -48,7 +47,7 @@ proc checkStyle*(files: seq[string]): int =
 
 proc fixStyle*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):
-    let (output, exitCode) = execCmdEx("nimpretty " & "indent:2 --maxLineLen:120 " & file)
+    let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & file)
     if exitCode != 0:
       result = exitCode
 
