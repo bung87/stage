@@ -46,12 +46,18 @@ proc checkStyle*(files: seq[string]): int =
     stdout.write(output)
 
 proc fixStyle*(files: seq[string]): int =
-  for file in files.filterIt(it.endsWith(".nim")):
-    let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & file)
+  when (NimMajor, NimMinor, NimPatch) >= (1, 3, 5):
+    let files = files.filterIt(it.endsWith(".nim")).join(" ")
+    let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & files)
     if exitCode != 0:
       result = exitCode
+  else:
+    for file in files.filterIt(it.endsWith(".nim")):
+      let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & file)
+      if exitCode != 0:
+        result = exitCode
 
-    stdout.write(output)
+      stdout.write(output)
 
 proc listFiles(pattern: string): seq[string] =
   result = toSeq(walkPattern(pattern))
