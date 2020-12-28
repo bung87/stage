@@ -16,14 +16,18 @@ fi
 """
 
 proc getStagedFiles*(pattern: string = ""): seq[string] =
+  const cached = "--cached"
+  const nameOnly = "--name-only"
+  const filter = "--diff-filter=d"
   var stdout = shellVerbose:
-    git diff "--cached""--name-only""--diff-filter=d" ($pattern)
+    git diff ($cached) ($nameOnly) ($filter) ($pattern)
 
   result = stdout.output.splitLines().filterIt(fileExists(it))
 
 proc checkError*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):
-    let (output, exitCode) = execCmdEx("nim " & "check --hints:off --colors:on  " & file)
+    let (output, exitCode) = execCmdEx("nim " &
+        "check --hints:off --colors:on  " & file)
     if exitCode != 0:
       shell:
         git restore "--staged" ($file)
@@ -40,7 +44,8 @@ proc checkStyle*(files: seq[string]): int =
   # --styleCheck:on|off|auto performs style checking for identifiers
 
   for file in files.filterIt(it.endsWith(".nim")):
-    let (output, exitCode) = execCmdEx("nimfix " & "--styleCheck:error --hints:off --colors:on  " & file)
+    let (output, exitCode) = execCmdEx("nimfix " &
+        "--styleCheck:error --hints:off --colors:on  " & file)
     if exitCode != 0:
       result = exitCode
     stdout.write(output)
@@ -48,12 +53,14 @@ proc checkStyle*(files: seq[string]): int =
 proc fixStyle*(files: seq[string]): int =
   when (NimMajor, NimMinor, NimPatch) >= (1, 3, 5):
     let files = files.filterIt(it.endsWith(".nim")).join(" ")
-    let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & files)
+    let (output, exitCode) = execCmdEx("nimpretty " &
+        "--indent:2 --maxLineLen:120 " & files)
     if exitCode != 0:
       result = exitCode
   else:
     for file in files.filterIt(it.endsWith(".nim")):
-      let (output, exitCode) = execCmdEx("nimpretty " & "--indent:2 --maxLineLen:120 " & file)
+      let (output, exitCode) = execCmdEx("nimpretty " &
+          "--indent:2 --maxLineLen:120 " & file)
       if exitCode != 0:
         result = exitCode
 
