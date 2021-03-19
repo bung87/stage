@@ -5,6 +5,7 @@ import strutils
 import osproc
 import os
 import sequtils
+import strformat
 
 const SH = """
 #!/bin/sh
@@ -19,10 +20,16 @@ proc getStagedFiles*(pattern: string = ""): seq[string] =
   const cached = "--cached"
   const nameOnly = "--name-only"
   const filter = "--diff-filter=d"
-  var stdout:string
-  shellAssign:
-    stdout = git diff ($cached) ($nameOnly) ($filter) ($pattern)
-  result = stdout.splitLines().filterIt(fileExists(it))
+  var res:tuple[output:string,exitCode:int]
+  let ptn = "\"" & pattern & "\""
+  if pattern.len > 0:
+    res = shellVerbose:
+      git diff ($cached) ($nameOnly) ($filter) ($ptn)
+  else:
+    res = shellVerbose:
+      git diff ($cached) ($nameOnly) ($filter)
+  if res[0].len > 0:
+    result = res[0].splitLines().filterIt(fileExists(it))
 
 proc checkError*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):
@@ -31,8 +38,8 @@ proc checkError*(files: seq[string]): int =
     if exitCode != 0:
       shell:
         git restore "--staged" ($file)
-      result = exitCode
-
+    result = exitCode
+    echo output
     stdout.write(output)
 
 proc checkStyle*(files: seq[string]): int =

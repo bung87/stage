@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.3.1"
+version       = "0.3.2"
 author        = "bung87"
 description   = "nim tasks apply to git hooks"
 license       = "MIT"
