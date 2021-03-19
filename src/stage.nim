@@ -20,7 +20,7 @@ proc getStagedFiles*(pattern: string = ""): seq[string] =
   const cached = "--cached"
   const nameOnly = "--name-only"
   const filter = "--diff-filter=d"
-  var res:tuple[output:string,exitCode:int]
+  var res: tuple[output: string, exitCode: int]
   let ptn = "\"" & pattern & "\""
   if pattern.len > 0:
     res = shellVerbose:
@@ -39,7 +39,6 @@ proc checkError*(files: seq[string]): int =
       shell:
         git restore "--staged" ($file)
     result = exitCode
-    echo output
     stdout.write(output)
 
 proc checkStyle*(files: seq[string]): int =
