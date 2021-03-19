@@ -19,10 +19,10 @@ proc getStagedFiles*(pattern: string = ""): seq[string] =
   const cached = "--cached"
   const nameOnly = "--name-only"
   const filter = "--diff-filter=d"
-  var stdout = shellVerbose:
-    git diff ($cached) ($nameOnly) ($filter) ($pattern)
-
-  result = stdout.output.splitLines().filterIt(fileExists(it))
+  var stdout:string
+  shellAssign:
+    stdout = git diff ($cached) ($nameOnly) ($filter) ($pattern)
+  result = stdout.splitLines().filterIt(fileExists(it))
 
 proc checkError*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):

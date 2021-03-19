@@ -11,7 +11,7 @@ bin = @["stage"]
 # Dependencies
 
 requires "nim >= 1.2.4"
-requires "shell"
+requires "shell >= 0.4.3"
 requires "cligen >= 1.3.2"
 
 let sh = """
