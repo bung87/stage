@@ -102,13 +102,18 @@ when isMainModule and defined(release):
     else:
       stderr.write("Please run git init first\n")
 
+  proc gitignore() =
+    const c = staticRead(currentSourcePath.parentDir() / "gitignore.tpl")
+    writeFile ".gitignore", c
+
   dispatchMulti(
-    [init],
-    [fixStyleD, cmdName = "fixStyle", help = {
+    [init, doc = "init pre commit git hook"],
+    [gitignore, doc = "init .gitignore"],
+    [fixStyleD, cmdName = "fixStyle", doc = "fix code style through `nimpretty`", help = {
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
     }],
-    [checkErrorD, cmdName = "checkError", help = {
+    [checkErrorD, cmdName = "checkError", doc = "check error through `nim check`", help = {
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
     }]
