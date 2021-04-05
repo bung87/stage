@@ -10,7 +10,6 @@ import strformat
 const SH = """
 #!/bin/sh
 stage workflow
-
 """
 
 proc getStagedFiles*(pattern: string = ""): seq[string] =

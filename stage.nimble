@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.3.3"
+version       = "0.3.4"
 author        = "bung87"
 description   = "nim tasks apply to git hooks"
 license       = "MIT"
@@ -18,12 +18,6 @@ requires "cligen >= 1.3.2"
 let sh = """
 #!/bin/sh
 stage workflow
-if [ $? == 0 ];
-then
-    exit 0
-else
-    exit 1
-fi
 """
 if dirExists(".git"):
   writeFile ".git/hooks/pre-commit",sh
