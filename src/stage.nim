@@ -92,13 +92,14 @@ when isMainModule and defined(release):
 
     result = checkError(files).bool
 
-  proc gitAdd(files: seq[string]):bool =
+  proc gitAdd(files: seq[string]): bool =
     const stash = "--"
     let filesStr = files.join(" ")
-    res = shellVerbose:
+    let res = shellVerbose:
       git add ($stash) ($filesStr)
+    result = res[1].bool
 
-  proc workflow(allFiles: bool = false, pattern: string = "**/*.nim"): bool = 
+  proc workflow(allFiles: bool = false, pattern: string = "**/*.nim"): bool =
     let files = if allFiles: listFiles(pattern) else: getStagedFiles(pattern)
     result = checkError(files).bool or fixStyle(files).bool or gitAdd(files).bool
 
