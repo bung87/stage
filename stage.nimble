@@ -17,8 +17,10 @@ requires "cligen >= 1.3.2"
 
 let sh = """
 #!/bin/sh
-if stage checkError;then
-    stage fixStyle
+stage workflow
+if [ $? == 0 ];
+then
+    exit 0
 else
     exit 1
 fi

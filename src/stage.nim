@@ -9,11 +9,8 @@ import strformat
 
 const SH = """
 #!/bin/sh
-if stage checkError;then
-    stage fixStyle
-else
-    exit 1
-fi
+stage workflow
+
 """
 
 proc getStagedFiles*(pattern: string = ""): seq[string] =
@@ -95,6 +92,16 @@ when isMainModule and defined(release):
 
     result = checkError(files).bool
 
+  proc gitAdd(files: seq[string]):bool =
+    const stash = "--"
+    let filesStr = files.join(" ")
+    res = shellVerbose:
+      git add ($stash) ($filesStr)
+
+  proc workflow(allFiles: bool = false, pattern: string = "**/*.nim"): bool = 
+    let files = if allFiles: listFiles(pattern) else: getStagedFiles(pattern)
+    result = checkError(files).bool or fixStyle(files).bool or gitAdd(files).bool
+
   proc init(): void =
     if dirExists(".git"):
       writeFile ".git/hooks/pre-commit", SH
@@ -114,6 +121,10 @@ when isMainModule and defined(release):
       "allFiles": "include all files, not just the staged ones"
     }],
     [checkErrorD, cmdName = "checkError", doc = "check error through `nim check`", help = {
+      "pattern": "limit to files matching this glob pattern",
+      "allFiles": "include all files, not just the staged ones"
+    }],
+    [workflow, cmdName = "workflow", doc = "combine all tasks and run git add", help = {
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
     }]
