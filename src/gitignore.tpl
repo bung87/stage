@@ -6,7 +6,7 @@
 nimcache/
 rnimcache/
 dnimcache/
-
+nimbledeps/
 *.o
 !/icons/*.o
 *.obj
