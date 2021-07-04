@@ -112,9 +112,15 @@ when isMainModule and defined(release):
   proc gitignore() =
     const c = staticRead(currentSourcePath.parentDir() / "gitignore.tpl")
     writeFile ".gitignore", c
-
+  proc ghWorkflow() =
+    const c = staticRead(currentSourcePath.parentDir() / "ghworkflow.tpl")
+    let dir = ".github" / "workflows"
+    if not dirExists(dir):
+      createDir(dir)
+    writeFile dir / "action.yml", c
   dispatchMulti(
     [init, doc = "init pre commit git hook"],
+    [ghWorkflow, doc = "init github workflow file"],
     [gitignore, doc = "init .gitignore"],
     [fixStyleD, cmdName = "fixStyle", doc = "fix code style through `nimpretty`", help = {
       "pattern": "limit to files matching this glob pattern",
@@ -124,7 +130,7 @@ when isMainModule and defined(release):
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
     }],
-    [workflow, cmdName = "workflow", doc = "combine all tasks and run git add", help = {
+    [workflow, cmdName = "workflow", doc = "checkError,fixStyle and run git add", help = {
       "pattern": "limit to files matching this glob pattern",
       "allFiles": "include all files, not just the staged ones"
     }]
