@@ -36,6 +36,8 @@ proc checkError*(files: seq[string]): int =
         git restore "--staged" ($file)
     result = exitCode
     stdout.write(output)
+    if exitCode != 0:
+      break
 
 proc checkStyle*(files: seq[string]): int =
   # not used
