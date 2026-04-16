@@ -100,7 +100,10 @@ when isMainModule and defined(release):
 
   proc workflow(allFiles: bool = false, pattern: string = "**/*.nim"): bool =
     let files = if allFiles: listFiles(pattern) else: getStagedFiles(pattern)
-    result = checkError(files).bool or fixStyle(files).bool or gitAdd(files).bool
+    let hasError = checkError(files) != 0
+    let styleChanged = fixStyle(files) != 0
+    let added = gitAdd(files)
+    result = hasError or styleChanged or added
 
   proc init(): void =
     if dirExists(".git"):
