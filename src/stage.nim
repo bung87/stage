@@ -94,7 +94,7 @@ when isMainModule and defined(release):
 
   proc gitAdd(files: seq[string]): bool =
     const stash = "--"
-    let filesStr = files.join(" ")
+    let filesStr = files.mapIt(quoteShell(it)).join(" ")
     let res = shellVerbose:
       git add ($stash) ($filesStr)
     result = res[1].bool
