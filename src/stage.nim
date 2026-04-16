@@ -13,17 +13,18 @@ stage workflow
 """
 
 proc getStagedFiles*(pattern: string = ""): seq[string] =
+  ## Returns staged files that still exist on disk (excludes deletions).
   const cached = "--cached"
   const nameOnly = "--name-only"
-  const filter = "--diff-filter=d"
+  const diffFilter = "--diff-filter=d"
   var res: tuple[output: string, exitCode: int]
   let ptn = "\"" & pattern & "\""
   if pattern.len > 0:
     res = shellVerbose:
-      git diff ($cached) ($nameOnly) ($filter) ($ptn)
+      git diff ($cached) ($nameOnly) ($diffFilter) ($ptn)
   else:
     res = shellVerbose:
-      git diff ($cached) ($nameOnly) ($filter)
+      git diff ($cached) ($nameOnly) ($diffFilter)
   if res[0].len > 0:
     result = res[0].splitLines().filterIt(fileExists(it))
 
@@ -93,8 +94,11 @@ when isMainModule and defined(release):
 
   proc init(): void =
     if dirExists(".git"):
-      writeFile ".git/hooks/pre-commit", SH
-      inclFilePermissions ".git/hooks/pre-commit", {fpUserExec, fpGroupExec, fpOthersExec}
+      let hookPath = ".git/hooks/pre-commit"
+      if fileExists(hookPath):
+        stderr.write("Warning: " & hookPath & " already exists, overwriting\n")
+      writeFile hookPath, SH
+      inclFilePermissions hookPath, {fpUserExec, fpGroupExec, fpOthersExec}
     else:
       stderr.write("Please run git init first\n")
 
