@@ -30,7 +30,7 @@ proc getStagedFiles*(pattern: string = ""): seq[string] =
 proc checkError*(files: seq[string]): int =
   for file in files.filterIt(it.endsWith(".nim")):
     let (output, exitCode) = execCmdEx("nim " &
-        "check --hints:off --colors:on  " & file)
+        "check --hints:off --colors:on " & quoteShell(file))
     if exitCode != 0:
       shell:
         git restore "--staged" ($file)
