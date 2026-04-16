@@ -7,6 +7,7 @@ on:
   pull_request:
     paths-ignore: 
       - README.md
+  workflow_dispatch:
 
 jobs:
   test:
@@ -20,47 +21,36 @@ jobs:
         experimental: [false]
         nim-version:
           - stable
-          # - devel
         include:
           - os: windows-latest
             experimental: true
             nim-version: stable
-            #   - stable
-            #   - devel
-        # exclude:
-          - os: macos-latest
-            experimental: true
-            nim-version: stable
-            #   - stable
-            #   - devel
     steps:
     - name: Checkout
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4
 
     - name: Cache choosenim
       id: cache-choosenim
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/.choosenim
         key: ${{ runner.os }}-choosenim-${{ matrix.nim-version}}
 
     - name: Cache nimble
       id: cache-nimble
-      uses: actions/cache@v1
+      uses: actions/cache@v4
       with:
         path: ~/.nimble
         key: ${{ runner.os }}-nimble-${{ matrix.nim-version}}-${{ hashFiles('*.nimble') }}
 
     - name: Setup nim
-      uses: jiro4989/setup-nim-action@v1.3.2
+      uses: jiro4989/setup-nim-action@v2
       with:
         nim-version: ${{ matrix.nim-version }}
 
     - name: Install Packages
       run: nimble install -d -y
-    # - name: Install slim
-    #   run: nimble install slim -y
-    - name: Build
-      run: nimble build
-    # - name: Test
-    #   run: slim --silent test 
+    - name: Install slim
+      run: nimble install slim -y
+    - name: Test
+      run: slim --silent test
