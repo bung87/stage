@@ -117,7 +117,7 @@ when isMainModule and defined(release):
     let dir = ".github" / "workflows"
     if not dirExists(dir):
       createDir(dir)
-    writeFile dir / "action.yml", c
+    writeFile dir / "test.yml", c
   dispatchMulti(
     [init, doc = "init pre commit git hook"],
     [ghWorkflow, doc = "init github workflow file"],
