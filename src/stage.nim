@@ -34,7 +34,7 @@ proc checkError*(files: seq[string]): int =
     if exitCode != 0:
       shell:
         git restore "--staged" ($file)
-    result = exitCode
+    result = max(result, exitCode)
     stdout.write(output)
 
 proc checkStyle*(files: seq[string]): int =
