@@ -2,10 +2,10 @@ name: Test
 
 on:
   push:
-    paths-ignore: 
+    paths-ignore:
       - README.md
   pull_request:
-    paths-ignore: 
+    paths-ignore:
       - README.md
   workflow_dispatch:
 
@@ -50,7 +50,5 @@ jobs:
 
     - name: Install Packages
       run: nimble install -d -y
-    - name: Install slim
-      run: nimble install slim -y
     - name: Test
-      run: slim --silent test
+      run: nimble --silent test
