@@ -37,21 +37,6 @@ proc checkError*(files: seq[string]): int =
     result = max(result, exitCode)
     stdout.write(output)
 
-proc checkStyle*(files: seq[string]): int =
-  # not used
-  # https://github.com/nim-lang/Nim/blob/27b081d1f77604ee47c886e69dbc52f53ea3741f/doc/nimfix.rst#L18
-  # --overwriteFiles:on|off overwrite the original nim files. DEFAULT is ON!
-  # --wholeProject overwrite every processed file.
-  # --checkExtern:on|off style check also extern names
-  # --styleCheck:on|off|auto performs style checking for identifiers
-
-  for file in files.filterIt(it.endsWith(".nim")):
-    let (output, exitCode) = execCmdEx("nimfix " &
-        "--styleCheck:error --hints:off --colors:on  " & file)
-    if exitCode != 0:
-      result = exitCode
-    stdout.write(output)
-
 proc fixStyle*(files: seq[string]): int =
   when (NimMajor, NimMinor, NimPatch) >= (1, 3, 5):
     if files.len > 0:
